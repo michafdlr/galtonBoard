@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Galton Board</title>
+    <meta name="description" content="Galton Board">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/ico" href="favicon.ico">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>Galton Board</h1>
+      <p>This is a simulation of the <a href="https://en.wikipedia.org/wiki/Galton_board" target="_blank">Galton Board</a>. It is meant for educational purposes. $n$ represents the number of peg rows (i.e. the number of trials), and $p \in (0,1)$ is the probability of a ball falling to the right side.</p>
+    </header>
+    <div class="element-container">
+      <div class="button-container">
+        <div>
+          <label for="n-input">$n=$</label>
+          <input type="number" id="n-input" min="1" max="10" value="5" title="Number of Rows in Board">
+        </div>
+        <div>
+          <label for="p-input">$p=$</label>
+          <input type="number" id="p-input" min="0.01" max="0.99" step="0.01" value="0.5" title="Probability">
+        </div>
+        <div>
+          <label for="ball-input">Balls: </label>
+          <input type="number" id="ball-input" min="1" max="100" value="20" title="Balls">
+        </div>
+        <button id="start-btn">Start</button>
+      </div>
+      <div class="canvas-container">
+        <canvas width="520" height="700" id="board"></canvas>
+      </div>
+    </div>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <script src="script.js" async defer></script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <script src="mathjax.js"></script>
+  </body>
+</html>

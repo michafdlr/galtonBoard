@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 0;
+  padding: 20px;
+  height: 95vh;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(45deg, rgb(219, 205, 205), rgb(250, 211, 211));
+}
+
+header {
+  margin: 0;
+}
+
+.button-container {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-direction: row;
+}
+
+input {
+  font-size: larger;
+  border: solid;
+  border-radius: 5px;
+  width: 75px;
+}
+
+input:focus {
+  outline: none;
+}
+
+button {
+  width: 75px;
+  height: 30px;
+  font-size: larger;
+  border: solid;
+  border-radius: 5px;
+  box-shadow: 0px 5px 10px;
+  background: rgb(122, 202, 48);
+}
+
+button:hover {
+  cursor: pointer;
+  transition: all 0.25s;
+  filter: brightness(1.25);
+}
+
+button:active {
+  transform: translate(2px, 3px);
+  box-shadow: 0px 0px;
+}
+
+a {
+  font-style: italic;
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* .element-container {
+} */
+
+#board {
+  display: flex;
+  background: linear-gradient(0.3turn, rgb(148, 82, 1), rgb(183, 129, 10), rgb(200, 113, 0));
+}
+
+
+@media screen and (max-height: 820px) {
+  #board {
+    height: 600px;
+  }
+}
