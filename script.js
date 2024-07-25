@@ -10,7 +10,7 @@ const speed = document.getElementById('speed');
 const boardWidth = board.width //520;
 const boardHeight = board.height //600;
 
-context.font = '25px sans serif';
+context.font = '25px Montserrat';
 context.textBaseline = 'middle';
 context.textAlign = 'center';
 
@@ -308,7 +308,6 @@ const startSimulation = () => {
   for (let i=0; i<=n; i++) {
     buckets.push({k: i, count: 0})
   }
-  console.log(buckets)
   addBalls();
   animationStopped = false;
   startBtn.style.background = 'rgb(255, 0, 0)';
@@ -372,8 +371,3 @@ ballInput.addEventListener('change', () => {
 })
 
 pInput.addEventListener('change', setP)
-
-
-// board.addEventListener('mousemove', (event) => {
-//   console.log(event.clientY);
-// })
