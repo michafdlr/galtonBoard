@@ -17,13 +17,16 @@
   <body>
     <header>
       <h1>Galton Board</h1>
-      <p>This is a simulation of the <a href="https://en.wikipedia.org/wiki/Galton_board" target="_blank">Galton Board</a>. It is meant for educational purposes. $n\in\mathbb N$ represents the number of peg rows (i.e. the number of trials), and $p \in (0,1)$ is the probability of a ball falling to the right side. If the random variable $X$ describes how often a ball falls to the right side then $X$ has binomial distribution and the probability for falling $k\in\mathbb N\cap[0, n]$ times to the right side is given by \[\mathbb P(X=k) = \binom nk p^k(1-p)^{n-k}.\]</p>
+      <p>This is a simulation of the <a href="https://en.wikipedia.org/wiki/Galton_board" target="_blank">Galton Board</a>. $n\in\mathbb N$ represents the number of peg rows (i.e. the number of trials), and $p \in (0,1)$ is the probability of a ball falling to the right side. If the random variable $X$ describes how often a ball falls to the right side then $X$ has binomial distribution and the probability for falling $k\in\mathbb N\cap[0, n]$ times to the right side is given by $\mathbb P(X=k) = \binom nk \cdot p^k\cdot (1-p)^{n-k}$.</p>
+      <p>
+        For the simulation $n$ can be a number from 1 to 9, and the number of balls from 1 to 200 inclusive.
+      </p>
     </header>
     <div class="element-container">
       <div class="button-container">
         <div>
           <label for="n-input">$n=$</label>
-          <input type="number" id="n-input" min="1" max="10" value="5" title="Number of Rows in Board">
+          <input type="number" id="n-input" min="1" max="9" value="5" title="Number of Rows in Board">
         </div>
         <div>
           <label for="p-input">$p=$</label>
@@ -40,11 +43,13 @@
             <option value="1" selected>1</option>
             <option value="1.5">1.5</option>
             <option value="2">2</option>
-            <option value="2.5">2.5</option>
           </select>
         </div>
         <button id="start-btn" title="Play/Pause">
           <i class="fas fa-play" id="play"></i>
+        </button>
+        <button id="reload-btn" title="Reload">
+          <i class="fas fa-redo"></i>
         </button>
       </div>
       <div class="canvas-container">

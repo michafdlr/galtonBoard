@@ -6,11 +6,12 @@ const ballInput = document.getElementById('ball-input');
 const startBtn = document.getElementById('start-btn');
 const playIcon = document.getElementById('play');
 const speed = document.getElementById('speed');
+const reloadBtn = document.getElementById('reload-btn');
 
 const boardWidth = board.width //520;
 const boardHeight = board.height //600;
 
-context.font = '25px Montserrat';
+context.font = 'bold 30px Montserrat';
 context.textBaseline = 'middle';
 context.textAlign = 'center';
 
@@ -28,8 +29,7 @@ let animationStopped = true;
 let hasFinished = true;
 let fallenBalls = 0;
 
-// let raf;
-// let rafs = [];
+let stepSize = 5;
 
 let buckets = [];
 for (let i=0; i<=nInput.value; i++) {
@@ -44,9 +44,9 @@ const setN = () => {
     nInput.value = 1;
     return 1;
   }
-  if (n>10) {
-    nInput.value = 10;
-    return 10;
+  if (n>9) {
+    nInput.value = 9;
+    return 9;
   }
   if (!Number.isInteger(n)) {
     nInput.value = Math.round(n);
@@ -89,18 +89,21 @@ const setP = () => {
   return p;
 }
 
-
-
 // Drawing Board
 const drawBoard = () => {
-  context.lineWidth = 10;
-  context.lineCap = 'round';
+  context.lineWidth = 6;
+  // context.lineCap = 'round';
   context.strokeStyle = 'rgb(0,0,0)';
   context.beginPath();
   context.moveTo(240, 0);
   context.lineTo(240, 40);
+  context.lineTo(3, boardHeight/1.75);
+  context.lineTo(3, boardHeight);
   context.moveTo(280, 0);
   context.lineTo(280, 40);
+  context.lineTo(boardWidth-3, boardHeight/1.75);
+  context.lineTo(boardWidth-3, boardHeight);
+  context.lineTo(0, boardHeight);
   context.stroke();
 }
 
@@ -143,20 +146,31 @@ const drawPegs = () => {
 const drawBuckets = () => {
   const n = setN();
   let bucketCount = n + 1;
+  context.lineWidth = 3;
+  context.lineCap = 'round';
+  context.strokeStyle = 'rgb(0,0,0)';
+  context.beginPath();
+  context.moveTo(260 - (bucketCount/2)*2*colWidth, boardHeight);
+  context.lineTo(260 - (bucketCount/2)*2*colWidth, boardHeight/1.7);
+  context.stroke();
   for (let i=1; i<=bucketCount; i++) {
-    context.lineWidth = 2;
+    context.lineWidth = 3;
     context.lineCap = 'round';
     context.strokeStyle = 'rgb(0,0,0)';
-    context.fillStyle = 'rgba(10, 150, 125, 0.3)'
+    context.fillStyle = 'rgba(50, 200, 150, 0.8)';
     context.beginPath();
     context.moveTo(260 - (bucketCount/2 - i)*2*colWidth, boardHeight);
-    context.lineTo(260 - (bucketCount/2 - i)*2*colWidth, boardHeight - 5*buckets[i-1].count);
-    context.lineTo(260 - (bucketCount/2 - i+1)*2*colWidth, boardHeight - 5*buckets[i-1].count);
+    context.lineTo(260 - (bucketCount/2 - i)*2*colWidth, boardHeight/1.7);
+    context.stroke();
+    context.strokeStyle = 'rgba(50, 200, 150, 1)';
+    context.beginPath();
+    context.moveTo(260 - (bucketCount/2 - i)*2*colWidth, boardHeight);
+    context.lineTo(260 - (bucketCount/2 - i)*2*colWidth, boardHeight - stepSize*buckets[i-1].count);
+    context.lineTo(260 - (bucketCount/2 - i+1)*2*colWidth, boardHeight - stepSize*buckets[i-1].count);
     context.lineTo(260 - (bucketCount/2 - i+1)*2*colWidth, boardHeight);
     context.fill();
-    // context.moveTo(260 + (bucketCount/2 - i)*2*colWidth, boardHeight);
-    // context.lineTo(260 + (bucketCount/2 - i)*2*colWidth, boardHeight-5);
     context.stroke();
+    // write ballcount
     context.fillStyle = 'rgb(0, 0, 0)';
     context.fillText(buckets[i-1].count, 260 - (bucketCount/2 - i)*2*colWidth - colWidth, boardHeight-15);
     if (fallenBalls<balls.length && balls[fallenBalls].y >= boardHeight - ballRadius - 2) {
@@ -166,7 +180,6 @@ const drawBuckets = () => {
       buckets[rCount].count++;
       fallenBalls++;
     }
-    // context.fillText(i-1, 260 - (bucketCount/2 - i)*2*colWidth - colWidth, boardHeight-15);
   }
 }
 
@@ -176,6 +189,13 @@ const addBalls = () => {
   fallenBalls = 0;
   balls = [];
   const ballCount = setBalls();
+  if (ballCount<100) {
+    stepSize = 5;
+  } else if (ballCount<150) {
+    stepSize = 3;
+  } else {
+    stepSize = 1.5;
+  }
   for (let i = 0; i < ballCount; i++) {
     balls.push({
       x: 260,
@@ -238,10 +258,6 @@ const animateBounce = (ball, prob) => {
 }
 
 const ballMove = (ball, prob) => {
-  // context.clearRect(ball.prevX - ballRadius - 1, ball.prevY - ballRadius - 1, ballRadius * 2 + 2, ballRadius * 2 + 2);
-  // ball.prevX = ball.x;
-  // ball.prevY = ball.y;
-
   for (let peg of pegs) {
     if (Math.abs(ball.y - peg.y) <= pegRadius && Math.abs(ball.x - peg.x) <= pegRadius + 0.1) {
       animateBounce(ball, prob);
@@ -313,7 +329,6 @@ const startSimulation = () => {
   startBtn.style.background = 'rgb(255, 0, 0)';
   playIcon.classList.remove('fa-play');
   playIcon.classList.add('fa-pause');
-  // startBtn.textContent = 'Stop';
   window.requestAnimationFrame(animate);
 }
 
@@ -371,3 +386,7 @@ ballInput.addEventListener('change', () => {
 })
 
 pInput.addEventListener('change', setP)
+
+reloadBtn.addEventListener('click', () => {
+  window.location.reload();
+})
