@@ -36,6 +36,61 @@ for (let i=0; i<=nInput.value; i++) {
   buckets.push({k: i, count: 0})
 }
 
+// Checking inputs
+
+const setN = () => {
+  let n = Number(nInput.value);
+  if (n < 1) {
+    nInput.value = 1;
+    return 1;
+  }
+  if (n>10) {
+    nInput.value = 10;
+    return 10;
+  }
+  if (!Number.isInteger(n)) {
+    nInput.value = Math.round(n);
+    return Math.round(n);
+  }
+  return n
+}
+
+const setBalls = () => {
+  let n = Number(ballInput.value);
+  if (n < 1) {
+    ballInput.value = 1;
+    return 1;
+  }
+  if (n>200) {
+    ballInput.value = 200;
+    return 200;
+  }
+  if (!Number.isInteger(n)) {
+    ballInput.value = Math.round(n);
+    return Math.round(n);
+  }
+  return n
+}
+
+const setP = () => {
+  let p = Number(pInput.value);
+  if (p <= 0) {
+    pInput.value = 0.01;
+    return 0.01;
+  }
+  if (p>1) {
+    pInput.value = 1;
+    return 1;
+  }
+  if (!Number.isInteger(p*100)) {
+    pInput.value = Math.round(p*100)/100;
+    return Math.round(p*100)/100;
+  }
+  return p;
+}
+
+
+
 // Drawing Board
 const drawBoard = () => {
   context.lineWidth = 10;
@@ -67,7 +122,7 @@ const drawPeg = (row, col) => {
 
 const drawPegs = () => {
   pegs = [];
-  let rows = nInput.value;
+  const rows = setN();
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col <= row; col++) {
       if (row%2 === 0 && col%2 === 0) {
@@ -86,31 +141,33 @@ const drawPegs = () => {
 // draw Buckets
 
 const drawBuckets = () => {
-  let bucketCount = Number(nInput.value) + 1;
+  const n = setN();
+  let bucketCount = n + 1;
   for (let i=1; i<=bucketCount; i++) {
-    context.lineWidth = 5;
+    context.lineWidth = 2;
     context.lineCap = 'round';
     context.strokeStyle = 'rgb(0,0,0)';
+    context.fillStyle = 'rgba(10, 150, 125, 0.3)'
     context.beginPath();
     context.moveTo(260 - (bucketCount/2 - i)*2*colWidth, boardHeight);
-    context.lineTo(260 - (bucketCount/2 - i)*2*colWidth, boardHeight-100);
-    context.moveTo(260 + (bucketCount/2 - i)*2*colWidth, boardHeight);
-    context.lineTo(260 + (bucketCount/2 - i)*2*colWidth, boardHeight-100);
+    context.lineTo(260 - (bucketCount/2 - i)*2*colWidth, boardHeight - 5*buckets[i-1].count);
+    context.lineTo(260 - (bucketCount/2 - i+1)*2*colWidth, boardHeight - 5*buckets[i-1].count);
+    context.lineTo(260 - (bucketCount/2 - i+1)*2*colWidth, boardHeight);
+    context.fill();
+    // context.moveTo(260 + (bucketCount/2 - i)*2*colWidth, boardHeight);
+    // context.lineTo(260 + (bucketCount/2 - i)*2*colWidth, boardHeight-5);
     context.stroke();
+    context.fillStyle = 'rgb(0, 0, 0)';
     context.fillText(buckets[i-1].count, 260 - (bucketCount/2 - i)*2*colWidth - colWidth, boardHeight-15);
     if (fallenBalls<balls.length && balls[fallenBalls].y >= boardHeight - ballRadius - 2) {
+      balls[fallenBalls].y = boardHeight+10;
+      balls[fallenBalls].draw();
       const rCount = balls[fallenBalls].rightCount;
       buckets[rCount].count++;
       fallenBalls++;
-      console.log(fallenBalls);
-      console.log(buckets);
     }
     // context.fillText(i-1, 260 - (bucketCount/2 - i)*2*colWidth - colWidth, boardHeight-15);
   }
-}
-
-const updateBuckets = () => {
-  console.log(balls);
 }
 
 // add Balls
@@ -118,13 +175,11 @@ const updateBuckets = () => {
 const addBalls = () => {
   fallenBalls = 0;
   balls = [];
-  const ballCount = Number(ballInput.value)
+  const ballCount = setBalls();
   for (let i = 0; i < ballCount; i++) {
     balls.push({
       x: 260,
       y: -9,
-      prevX: 260, // Track previous position
-      prevY: -9, // Track previous position
       rightCount: 0,
       draw() {
         context.lineWidth = 3;
@@ -141,19 +196,6 @@ const addBalls = () => {
 }
 
 // Simulate Ball Movement
-
-// const drawBall = (ball) => {
-//   const ballX = ball.x;
-//   const ballY = ball.y;
-//   context.lineWidth = 3;
-//   context.strokeStyle = 'rgb(200, 200, 220)';
-//   context.fillStyle = 'rgb(100,90,100)';
-//   context.lineCap = 'round';
-//   context.beginPath();
-//   context.arc(ballX, ballY, 6, 0, Math.PI * 2);
-//   context.stroke();
-//   context.fill();
-// }
 
 const redrawCanvas = () => {
   context.clearRect(0, 0, board.width, board.height);
@@ -196,10 +238,9 @@ const animateBounce = (ball, prob) => {
 }
 
 const ballMove = (ball, prob) => {
-  context.clearRect(ball.prevX - ballRadius - 1, ball.prevY - ballRadius - 1, ballRadius * 2 + 2, ballRadius * 2 + 2);
-
-  ball.prevX = ball.x;
-  ball.prevY = ball.y;
+  // context.clearRect(ball.prevX - ballRadius - 1, ball.prevY - ballRadius - 1, ballRadius * 2 + 2, ballRadius * 2 + 2);
+  // ball.prevX = ball.x;
+  // ball.prevY = ball.y;
 
   for (let peg of pegs) {
     if (Math.abs(ball.y - peg.y) <= pegRadius && Math.abs(ball.x - peg.x) <= pegRadius + 0.1) {
@@ -225,20 +266,19 @@ const animateBall = async (ball, prob) => {
   moveBall();
 }
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-
 // Animate Balls falling
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 const animate = async () => {
-  const prob = Number(pInput.value);
+  const prob = setP();
   for (let i = 0; i < balls.length; i++) {
     if (!animationStopped) {
       if (balls[i].y === -9) {
         await animateBall(balls[i], prob);
         await delay(1000/simSpeed);
       }
-      if (i === balls.length -1) {
+      if (i === balls.length - 1) {
         setTimeout(() => {
           startBtn.style.background = 'rgb(122, 202, 48)';
           playIcon.classList.remove('fa-pause');
@@ -249,7 +289,6 @@ const animate = async () => {
           pInput.disabled = false;
           ballInput.disabled = false;
           speed.disabled = false;
-          console.log(balls);
         }, 10000/simSpeed);
       }
     }
@@ -265,7 +304,8 @@ const startSimulation = () => {
   hasFinished = false;
   simSpeed = 2*Number(speed.value);
   speedY = 0.75 * simSpeed;
-  for (let i=0; i<=nInput.value; i++) {
+  const n = setN();
+  for (let i=0; i<=n; i++) {
     buckets.push({k: i, count: 0})
   }
   console.log(buckets)
@@ -314,15 +354,24 @@ window.addEventListener('load', () => {
   redrawCanvas();
 })
 
-// redraw board when n changed
+// redraw board when n or balls changed
 
 nInput.addEventListener('change', () => {
+  const n = setN();
   buckets = [];
-  for (let i=0; i<=nInput.value; i++) {
+  for (let i=0; i<=n; i++) {
     buckets.push({k: i, count: 0})
   }
   redrawCanvas();
 })
+
+ballInput.addEventListener('change', () => {
+  setBalls();
+  addBalls();
+  redrawCanvas();
+})
+
+pInput.addEventListener('change', setP)
 
 
 // board.addEventListener('mousemove', (event) => {
