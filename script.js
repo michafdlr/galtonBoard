@@ -4,6 +4,8 @@ const nInput = document.getElementById('n-input');
 const pInput = document.getElementById('p-input');
 const ballInput = document.getElementById('ball-input');
 const startBtn = document.getElementById('start-btn');
+const playIcon = document.getElementById('play');
+const speed = document.getElementById('speed');
 
 const boardWidth = board.width //520;
 const boardHeight = board.height //600;
@@ -19,16 +21,20 @@ let pegs = [];
 const pegRadius = 9;
 
 let balls = [];
-let simSpeed = 3;
+let simSpeed = 2*Number(speed.value);
 let speedY = 0.75 * simSpeed;
 const ballRadius = 5;
 let animationStopped = true;
 let hasFinished = true;
+let fallenBalls = 0;
 
 // let raf;
 // let rafs = [];
 
 let buckets = [];
+for (let i=0; i<=nInput.value; i++) {
+  buckets.push({k: i, count: 0})
+}
 
 // Drawing Board
 const drawBoard = () => {
@@ -91,18 +97,30 @@ const drawBuckets = () => {
     context.moveTo(260 + (bucketCount/2 - i)*2*colWidth, boardHeight);
     context.lineTo(260 + (bucketCount/2 - i)*2*colWidth, boardHeight-100);
     context.stroke();
-    context.fillText(i-1, 260 - (bucketCount/2 - i)*2*colWidth - colWidth, boardHeight-15);
+    context.fillText(buckets[i-1].count, 260 - (bucketCount/2 - i)*2*colWidth - colWidth, boardHeight-15);
+    if (fallenBalls<balls.length && balls[fallenBalls].y >= boardHeight - ballRadius - 2) {
+      const rCount = balls[fallenBalls].rightCount;
+      buckets[rCount].count++;
+      fallenBalls++;
+      console.log(fallenBalls);
+      console.log(buckets);
+    }
+    // context.fillText(i-1, 260 - (bucketCount/2 - i)*2*colWidth - colWidth, boardHeight-15);
   }
+}
+
+const updateBuckets = () => {
+  console.log(balls);
 }
 
 // add Balls
 
 const addBalls = () => {
+  fallenBalls = 0;
   balls = [];
   const ballCount = Number(ballInput.value)
   for (let i = 0; i < ballCount; i++) {
     balls.push({
-      id: i,
       x: 260,
       y: -9,
       prevX: 260, // Track previous position
@@ -213,39 +231,40 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 // Animate Balls falling
 
 const animate = async () => {
+  const prob = Number(pInput.value);
   for (let i = 0; i < balls.length; i++) {
     if (!animationStopped) {
-      const prob = Number(pInput.value); // Calculate a new probability for each ball
-      await animateBall(balls[i], prob); // Animate each ball separately with the new probability
-      await delay(300); // Add a small delay before the next ball starts falling
+      if (balls[i].y === -9) {
+        await animateBall(balls[i], prob);
+        await delay(1000/simSpeed);
+      }
       if (i === balls.length -1) {
         setTimeout(() => {
-          animationStopped = true;
           startBtn.style.background = 'rgb(122, 202, 48)';
-          startBtn.textContent = 'Start';
+          playIcon.classList.remove('fa-pause');
+          playIcon.classList.add('fa-play');
+          animationStopped = true;
           hasFinished = true;
-          console.log(balls)
-        }, 3000);
+          nInput.disabled = false;
+          pInput.disabled = false;
+          ballInput.disabled = false;
+          speed.disabled = false;
+          console.log(balls);
+        }, 10000/simSpeed);
       }
     }
   }
 }
 
-// const animate = (ball) => {
-//   const prob = pInput.value;
-//   redrawCanvas();
-//   ballMove(ball, prob);
-//   // balls[0].draw();
-//   // drawBall(balls[0]);
-//   if (ball.y < boardHeight - ballRadius) {
-//     requestAnimationFrame(() => {animate(ball)});
-//     // animationStopped = true;
-//   }
-// }
-
-
 const startSimulation = () => {
+  nInput.disabled = true;
+  pInput.disabled = true;
+  ballInput.disabled = true;
+  speed.disabled = true;
+  buckets = [];
   hasFinished = false;
+  simSpeed = 2*Number(speed.value);
+  speedY = 0.75 * simSpeed;
   for (let i=0; i<=nInput.value; i++) {
     buckets.push({k: i, count: 0})
   }
@@ -253,20 +272,24 @@ const startSimulation = () => {
   addBalls();
   animationStopped = false;
   startBtn.style.background = 'rgb(255, 0, 0)';
-  startBtn.textContent = 'Stop';
+  playIcon.classList.remove('fa-play');
+  playIcon.classList.add('fa-pause');
+  // startBtn.textContent = 'Stop';
   window.requestAnimationFrame(animate);
 }
 
 const stopSimulation = () => {
   animationStopped = true;
   startBtn.style.background = 'rgb(122, 202, 48)';
-  startBtn.textContent = 'Start';
+  playIcon.classList.remove('fa-pause');
+  playIcon.classList.add('fa-play');
 }
 
 const continueSimulation = () => {
   animationStopped = false;
   startBtn.style.background = 'rgb(255, 0, 0)';
-  startBtn.textContent = 'Stop';
+  playIcon.classList.remove('fa-play');
+  playIcon.classList.add('fa-pause');
   window.requestAnimationFrame(animate);
 }
 
@@ -294,6 +317,10 @@ window.addEventListener('load', () => {
 // redraw board when n changed
 
 nInput.addEventListener('change', () => {
+  buckets = [];
+  for (let i=0; i<=nInput.value; i++) {
+    buckets.push({k: i, count: 0})
+  }
   redrawCanvas();
 })
 
