@@ -19,7 +19,7 @@
       <h1>Galton Board</h1>
       <p>This is a simulation of the <a href="https://en.wikipedia.org/wiki/Galton_board" target="_blank">Galton Board</a>. $n\in\mathbb N$ represents the number of peg rows (i.e. the number of trials), and $p \in (0,1)$ is the probability of a ball falling to the right side. If the random variable $X$ describes how often a ball falls to the right side then $X$ has binomial distribution and the probability for falling $k\in\mathbb N\cap[0, n]$ times to the right side is given by $\mathbb P(X=k) = \binom nk \cdot p^k\cdot (1-p)^{n-k}$.</p>
       <p>
-        For the simulation $n$ can be a number from 1 to 9, and the number of balls from 1 to 200 inclusive. The simulation speed can be set from 0.5 to 2 in step sizes of 0.5.
+        For the simulation $n$ can be a number from 1 to 9, and the number of balls from 1 to 500 inclusive. The simulation speed can be set from 0.5 to 2 in step sizes of 0.5.
       </p>
     </header>
     <div class="element-container">
@@ -34,7 +34,7 @@
         </div>
         <div>
           <label for="ball-input">Balls: </label>
-          <input type="number" id="ball-input" min="1" max="200" value="20" title="Balls">
+          <input type="number" id="ball-input" min="1" max="500" value="20" title="Balls">
         </div>
         <div>
           <label for="speed">Speed: </label>

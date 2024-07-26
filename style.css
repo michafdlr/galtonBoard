@@ -30,9 +30,10 @@ input, select {
   border: solid;
   border-radius: 5px;
   width: 55px;
+  background: white;
 }
 
-input, select:focus {
+input:focus, select:focus {
   outline: none;
 }
 
@@ -57,6 +58,11 @@ button:active {
   outline: none;
   transform: translate(2px, 3px);
   box-shadow: 0px 0px;
+}
+
+input:disabled, select:disabled {
+  color: rgb(197, 197, 197);
+  background: rgba(144, 144, 144, 1);
 }
 
 button#reload-btn {

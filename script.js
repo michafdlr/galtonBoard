@@ -61,9 +61,9 @@ const setBalls = () => {
     ballInput.value = 1;
     return 1;
   }
-  if (n>200) {
-    ballInput.value = 200;
-    return 200;
+  if (n>500) {
+    ballInput.value = 500;
+    return 500;
   }
   if (!Number.isInteger(n)) {
     ballInput.value = Math.round(n);
@@ -92,7 +92,6 @@ const setP = () => {
 // Drawing Board
 const drawBoard = () => {
   context.lineWidth = 6;
-  // context.lineCap = 'round';
   context.strokeStyle = 'rgb(0,0,0)';
   context.beginPath();
   context.moveTo(240, 0);
@@ -111,7 +110,6 @@ const drawBoard = () => {
 // Drawing Pegs
 
 const drawPeg = (row, col) => {
-  context.lineWidth = 10;
   context.lineCap = 'round';
   context.fillStyle = 'rgb(0,0,0)';
   context.strokeStyle = 'rgb(0,0,0)';
@@ -188,13 +186,24 @@ const drawBuckets = () => {
 const addBalls = () => {
   fallenBalls = 0;
   balls = [];
+  const prob = setP();
   const ballCount = setBalls();
   if (ballCount<100) {
     stepSize = 5;
-  } else if (ballCount<150) {
+  } else if (ballCount<200) {
     stepSize = 3;
+  } else if (ballCount<400){
+    if (Math.abs(prob - 0.5)>0.4) {
+      stepSize = 0.75;
+    } else {
+      stepSize = 1.5;
+    }
   } else {
-    stepSize = 1.5;
+    if (Math.abs(prob - 0.5)>0.4) {
+      stepSize = 0.5;
+    } else {
+      stepSize = 1;
+    }
   }
   for (let i = 0; i < ballCount; i++) {
     balls.push({
