@@ -25,6 +25,7 @@ header {
 }
 
 input, select {
+  color: black;
   font-size: larger;
   border: solid;
   border-radius: 5px;
@@ -37,11 +38,11 @@ input, select:focus {
 
 button {
   color: black;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   font-size: larger;
   border: solid;
-  border-radius: 15px;
+  border-radius: 17.5px;
   box-shadow: 0px 5px 10px;
   background: rgb(122, 202, 48);
 }
@@ -59,7 +60,6 @@ button:active {
 }
 
 button#reload-btn {
-  width: 35px;
   background: rgb(255, 0, 0);
 }
 
